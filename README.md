@@ -17,6 +17,8 @@ It is designed for short, supervised sessions — finishing a build, leaving an 
 
 > Part of the [**agenc.tech**](https://agenc.tech) project — tooling for running autonomous agents on your own hardware.
 
+> **Heads up:** Amphetamine, Caffeine, KeepingYouAwake, and the macOS Battery settings only prevent *idle sleep*. Close the lid and the Mac still goes to sleep — your agent dies. `agenc-lid` overrides *lid-close sleep* specifically, which is the one you actually need when you want to fold the laptop and walk away.
+
 ---
 
 ## Features
