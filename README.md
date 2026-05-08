@@ -28,6 +28,20 @@ It is designed for short, supervised sessions — finishing a build, leaving an 
 - **Lightweight:** ~400 KB binary, idle CPU = 0%, no background daemons.
 - **Privacy-respecting:** stores no password, makes no network calls, ships no analytics.
 
+## Why this and not...
+
+**...just `sudo pmset -a disablesleep 1` in Terminal?**
+That is exactly what the app does under the hood. The difference is a one-click menu bar toggle, a visible status indicator, a built-in timer that auto-reverts, and a kill switch that survives the app crashing. `disablesleep 1` is system-wide — leave it on by accident overnight and your Mac will never sleep until you remember. The app makes that hard to forget.
+
+**...System Settings → Battery → "Prevent automatic sleeping"?**
+Those toggles control *idle sleep* and most only apply on AC power. They do **not** stop the Mac from sleeping when you close the lid. The `pmset disablesleep` flag is the only reliable way to override lid-close sleep, and Apple does not expose it in System Settings.
+
+**...Amphetamine / Caffeine / KeepingYouAwake?**
+Those apps prevent *idle sleep* (cursor not moving, display off after N minutes). They do **not** prevent *lid-close sleep*. Close the lid with any of them running and your Mac still goes to sleep within seconds. `agenc-lid` handles the lid-close case specifically, which is the one you care about when you want to walk away from a running agent.
+
+**...InsomniaX / NoSleep?**
+Those required kernel extensions and don't work reliably on Apple Silicon or current macOS. `agenc-lid` uses Apple's documented `pmset` tool — no kexts, no signing workarounds, no SIP relaxation.
+
 ## Requirements
 
 - macOS 13 (Ventura) or newer
