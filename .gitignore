@@ -1,0 +1,39 @@
+# Build output
+build/
+generated-assets/
+DerivedData/
+*.app/
+*.dmg
+*.zip
+
+# Swift / Xcode
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+*.swiftmodule
+*.swiftdoc
+*.o
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp / debug
+/tmp/
+*.log
+agenc-lid-test.*
+agenc-cycle-*.png
+agenc-lid-live.png
+agenc-on.png
+agenc-off.png
+agenc-current.png
+agenc-now.png

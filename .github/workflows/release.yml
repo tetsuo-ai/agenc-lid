@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build (e.g. v0.2.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & package
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: ver
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF##*/}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Install librsvg
+        run: brew install librsvg
+
+      - name: Build app bundle
+        run: ./build.sh
+
+      - name: Create DMG
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.ver.outputs.version }}"
+          STAGE="$(mktemp -d)"
+          cp -R build/agenc-lid.app "$STAGE/"
+          ln -s /Applications "$STAGE/Applications"
+          DMG_PATH="build/agenc-lid-${VERSION}.dmg"
+          hdiutil create \
+            -volname "agenc-lid ${VERSION}" \
+            -srcfolder "$STAGE" \
+            -ov \
+            -format UDZO \
+            "$DMG_PATH"
+          ls -lh "$DMG_PATH"
+          shasum -a 256 "$DMG_PATH" | tee "$DMG_PATH.sha256"
+
+      - name: Create ZIP fallback
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          (cd build && zip -ry "agenc-lid-${VERSION}.zip" agenc-lid.app)
+          shasum -a 256 "build/agenc-lid-${VERSION}.zip" | tee "build/agenc-lid-${VERSION}.zip.sha256"
+
+      - name: Upload artifacts (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: agenc-lid-${{ steps.ver.outputs.version }}
+          path: |
+            build/agenc-lid-*.dmg
+            build/agenc-lid-*.zip
+            build/agenc-lid-*.sha256
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: agenc-lid ${{ steps.ver.outputs.version }}
+          draft: true
+          generate_release_notes: true
+          files: |
+            build/agenc-lid-${{ steps.ver.outputs.version }}.dmg
+            build/agenc-lid-${{ steps.ver.outputs.version }}.dmg.sha256
+            build/agenc-lid-${{ steps.ver.outputs.version }}.zip
+            build/agenc-lid-${{ steps.ver.outputs.version }}.zip.sha256
