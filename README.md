@@ -6,7 +6,7 @@
 
 [![macOS 13+](https://img.shields.io/badge/macOS-13%2B-blue?logo=apple&logoColor=white)](https://www.apple.com/macos/)
 [![Swift 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange?logo=swift&logoColor=white)](https://swift.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/tetsuo-ai/agenc-lid?color=F97316)](https://github.com/tetsuo-ai/agenc-lid/releases/latest)
 
 </div>
@@ -155,4 +155,4 @@ open build/agenc-lid.app   # smoke-test the panel + DETAILS view
 
 ## License
 
-[MIT](LICENSE)
+[GPL-3.0](LICENSE)
