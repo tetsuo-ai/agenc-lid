@@ -15,6 +15,8 @@
 
 It is designed for short, supervised sessions — finishing a build, leaving an autonomous agent working, draining a long task — without putting the laptop to sleep when you fold it shut.
 
+> Part of the [**agenc.tech**](https://agenc.tech) project — tooling for running autonomous agents on your own hardware.
+
 ---
 
 ## Features
