@@ -155,4 +155,4 @@ open build/agenc-lid.app   # smoke-test the panel + DETAILS view
 
 ## License
 
-[MIT](LICENSE) © Pavel Chmirenko
+[MIT](LICENSE)
