@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build smoke test
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install librsvg
+        run: brew install librsvg
+
+      - name: Build
+        run: ./build.sh
+
+      - name: Verify app structure
+        run: |
+          set -euo pipefail
+          test -x build/agenc-lid.app/Contents/MacOS/agenc-lid
+          test -f build/agenc-lid.app/Contents/Info.plist
+          test -f build/agenc-lid.app/Contents/Resources/AppIcon.icns
+          test -f build/agenc-lid.app/Contents/Resources/BrandMark.png
+          test -f build/agenc-lid.app/Contents/Resources/MenuBarIconOn.png
+          test -f build/agenc-lid.app/Contents/Resources/MenuBarIconOff.png
+          codesign --verify --verbose=4 build/agenc-lid.app
+          /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" build/agenc-lid.app/Contents/Info.plist | grep -x tech.agenc.lid
